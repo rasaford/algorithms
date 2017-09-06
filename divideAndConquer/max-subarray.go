@@ -4,7 +4,7 @@ package divideAndConquer
 // maximum sub-array Problem im CLRS.
 // It finds the subarray with the maximum sum in O(n lg n) time.
 func MaxSubArrayRec(array []int) ([]int, int) {
-	low, high, sum := maxSubArray(array, 0, len(array))
+	low, high, sum := maxSubArray(array, 0, len(array)-1)
 	return array[low : high+1], sum
 }
 
