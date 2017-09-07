@@ -3,18 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/rasaford/algorithms/divideAndConquer/matrix"
+	"github.com/rasaford/algorithms/sorting"
 )
 
 func main() {
-	a := [][]int{
-		[]int{1, 2},
-		[]int{3, 4},
-	}
-	b := [][]int{
-		[]int{2, 0},
-		[]int{1, 2},
-	}
-	res, _ := matrix.SquareMultiplyStrassen(a, b)
+	res := sorting.MergeSort([]int{5, 4, 3, 2, 1})
 	fmt.Println(res)
 }

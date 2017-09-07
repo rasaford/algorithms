@@ -7,7 +7,7 @@ import (
 )
 
 type args struct {
-	array []int
+	input []int
 }
 
 var tests = []struct {
@@ -17,18 +17,25 @@ var tests = []struct {
 }{
 	{
 		"reverse sorted",
-		args{[]int{5, 4, 3, 2, 1}},
-		[]int{1, 2, 3, 4, 5},
+		args{[]int{5, 4, 3, 2, 1, -55}},
+		[]int{-55, 1, 2, 3, 4, 5},
+	},
+	{
+		"short random",
+		args{[]int{44, 534, -1, -223234, 3423,
+			-5, -55555, -234, -111, 23423409}},
+		[]int{-223234, -55555, -234, -111, -5,
+			-1, 44, 534, 3423, 23423409},
 	},
 	{
 		"random",
 		args{[]int{-1503, 527, 1479, -837, -639, -1658, 825,
 			-1364, 1864, -92, 1222, 687, 1954, 2033, -1704,
 			-742, -373, 1173, 1829, 994, -241, 218, -1432,
-			1682, -897, 1323, -2001, 1272, 1078, -9, 821,
-			1912, 475, 783, -91, 332, -2007, -1033, -1283,
-			914, -371, -1390, -1078, -1213, 497, 915, -1058,
-			740, -1665, -935, -1259, -439, -1547, -873, 1192,
+			// 1682, -897, 1323, -2001, 1272, 1078, -9, 821,
+			// 1912, 475, 783, -91, 332, -2007, -1033, -1283,
+			// 914, -371, -1390, -1078, -1213, 497, 915, -1058,
+			// 740, -1665, -935, -1259, -439, -1547, -873, 1192,
 			1553, 712, -1286, -153, -85, -1277, 30, 189, 412}},
 		[]int{-2007, -2001, -1704, -1665, -1658, -1547, -1503,
 			-1432, -1390, -1364, -1286, -1283, -1277, -1259,
@@ -44,7 +51,7 @@ var tests = []struct {
 func TestMergeSort(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := MergeSort(tt.args.array); !reflect.DeepEqual(got, tt.want) {
+			if got := MergeSort(tt.args.input); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("MergeSort() = %v, want %v", got, tt.want)
 			}
 		})
@@ -54,7 +61,7 @@ func TestMergeSort(t *testing.T) {
 func TestBubbleSort(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := BubbleSort(tt.args.array); !reflect.DeepEqual(got, tt.want) {
+			if got := BubbleSort(tt.args.input); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("BubbleSort() = %v, want %v", got, tt.want)
 			}
 		})
@@ -64,7 +71,7 @@ func TestBubbleSort(t *testing.T) {
 func TestSelectionSort(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := SelectionSort(tt.args.array); !reflect.DeepEqual(got, tt.want) {
+			if got := SelectionSort(tt.args.input); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("SelectionSort() = %v, want %v", got, tt.want)
 			}
 		})
@@ -77,4 +84,14 @@ func random(n int) []int {
 		s[i] = rand.Intn(n*n) - n*n/2
 	}
 	return s
+}
+
+func TestQuickSort(t *testing.T) {
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := QuickSort(tt.args.input); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("QuickSort() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }
