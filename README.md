@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/rasaford/algorithms.svg?branch=master)](https://travis-ci.org/rasaford/algorithms)
 # Algorithms
 This is a collection of algorithms and data structures written in go based on CLRS
 # Table of Contents
