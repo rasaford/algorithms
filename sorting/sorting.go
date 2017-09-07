@@ -7,7 +7,7 @@ package sorting
 // It runs in O(n lg n) time, where n := len(input)
 func MergeSort(input []int) []int {
 	// TODO: Implement MergeSort
-	return input
+	return BubbleSort(input)
 }
 
 // BubbleSort is the naive implementation of sorting an array.
@@ -26,9 +26,9 @@ func BubbleSort(input []int) []int {
 	return array
 }
 
-func SelectionSort(array []int) []int {
+func SelectionSort(input []int) []int {
 	// TODO: Implemente Selection Sort
-	return array
+	return BubbleSort(input)
 }
 
 // swap uses pointers to two ints to swap them

@@ -52,32 +52,20 @@ func maxCrossingSubArray(array []int, low, mid, high int) (int, int, int) {
 // problem in linear time.
 // Solution to exercise 4.1-5
 func MaxSubArrayLin(array []int) ([]int, int) {
-	low, high := 0, 0
-	negativeSum := 0
-	if array[0] < 0 {
-		negativeSum = array[0]
-	}
-	sum := array[0]
-	for i := 1; i < len(array); i++ {
-		if array[i] > 0 {
-			if high == i-1 {
-				high = i
-				sum += array[i]
-			} else if array[i]+negativeSum > 0 {
-				high = i
-				sum += array[i] + negativeSum
-			} else {
-				sum = array[i]
-				low, high = i, i
-				negativeSum = 0
-			}
-		} else if array[i] > sum {
-			sum = array[i]
-			low, high = i, i
-			negativeSum = 0
-		} else if array[i] <= 0 {
-			negativeSum += array[i]
+	maxSum := -1 << 32 // max needs to be -inf
+	maxLeft, maxRight := 0, 0
+	sum, lastLeft := 0, 0
+	for i := 0; i < len(array); i++ {
+		sum += array[i]
+		if sum > maxSum {
+			maxSum = sum
+			maxLeft = lastLeft
+			maxRight = i
+		}
+		if sum < 0 {
+			sum = 0
+			lastLeft = i + 1
 		}
 	}
-	return array[low : high+1], sum
+	return array[maxLeft : maxRight+1], maxSum
 }
