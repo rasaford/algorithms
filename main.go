@@ -3,15 +3,18 @@ package main
 import (
 	"fmt"
 
-	divide "github.com/rasaford/algorithms/divideAndConquer"
+	"github.com/rasaford/algorithms/divideAndConquer/matrix"
 )
 
 func main() {
-	input := []int{13, -3, -25, 20,
-		-3, -16, -23, 18,
-		20, -7, 12, -5,
-		-22, 15, -4, 7}
-	input = []int{-5, -9, 20, -1, 20, -5, -2000, -4}
-	fmt.Println(divide.MaxSubArrayRec(input))
-	fmt.Println(divide.MaxSubArrayLin(input))
+	a := [][]int{
+		[]int{1, 2},
+		[]int{3, 4},
+	}
+	b := [][]int{
+		[]int{2, 0},
+		[]int{1, 2},
+	}
+	res, _ := matrix.SquareMultiplyStrassen(a, b)
+	fmt.Println(res)
 }
