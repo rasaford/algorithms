@@ -1,53 +1,41 @@
 package sorting
 
-import (
-	"math"
-)
-
-const inf = math.MaxInt32
-const negInf = math.MaxInt32
-
 // MergeSort is a more complex implmentation of sorting, it
 // recursively splits the input and sorts the subarrays. Then
 // it combines the inputs to form the original array. It therefore uses the
 // divide and conquer paradigm.
 //
 // It runs in O(n lg n) time, where n := len(input)
+// Space Complexity is O(n)
 func MergeSort(input []int) []int {
-	array := clone(input)
-	mergeSortRec(array, 0, len(array)-1)
+	// merge sort needs 2 arrays
+	// they get swaped at each level of the recursion tree
+	array, work := clone(input), clone(input)
+	mergeSortRec(array, work, 0, len(work))
 	return array
 }
 
-func mergeSortRec(input []int, low, high int) {
-	if low < high {
-		mid := (low + high) / 2
-		mergeSortRec(input, 0, mid)
-		mergeSortRec(input, mid+1, high)
-		merge(input, low, mid, high)
+// recursively splits the two arrays and swaps work and input at
+// each step of the recursion tree
+func mergeSortRec(input, work []int, low, high int) {
+	if high-low <= 1 {
+		return
 	}
+	mid := (low + high) / 2
+	mergeSortRec(work, input, low, mid)
+	mergeSortRec(work, input, mid, high)
+	merge(work, input, low, mid, high)
 }
 
-func merge(input []int, low, mid, high int) {
-	lower := mid - low + 1
-	upper := high - mid
-	left := make([]int, lower+1)
-	right := make([]int, upper+1)
-	for i := 0; i < lower; i++ {
-		left[i] = input[low+i]
-	}
-	for i := 1; i <= upper; i++ {
-		right[i-1] = input[mid+i]
-	}
-	left[lower] = inf
-	right[upper] = inf
-	i, j := 0, 0
-	for k := low; k <= high; k++ {
-		if left[i] <= right[j] {
-			input[k] = left[i]
+// merges the two sorted subarrays from input to work
+func merge(input, work []int, low, mid, high int) {
+	i, j := low, mid
+	for k := low; k < high; k++ {
+		if i < mid && (j >= high || input[i] <= input[j]) {
+			work[k] = input[i]
 			i++
 		} else {
-			input[k] = right[j]
+			work[k] = input[j]
 			j++
 		}
 	}
@@ -98,18 +86,4 @@ func HeapSort(input []int) []int {
 
 func BinaryInsertionSort(input []int) []int {
 	return MergeSort(input)
-}
-
-// swap uses pointers to two ints to swap them
-func swap(a, b *int) {
-	temp := *a
-	*a = *b
-	*b = temp
-}
-
-// clones the array and returns the copy
-func clone(input []int) []int {
-	array := make([]int, len(input))
-	copy(array, input)
-	return array
 }
