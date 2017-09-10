@@ -86,3 +86,13 @@ func TestQuickSort(t *testing.T) {
 		})
 	}
 }
+
+func TestHeapSort(t *testing.T) {
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := HeapSort(tt.args.input); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("QuickSort() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

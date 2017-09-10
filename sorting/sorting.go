@@ -1,5 +1,44 @@
 package sorting
 
+import "github.com/rasaford/algorithms/datastructure/heap"
+
+// BubbleSort is the naive implementation of sorting an array.
+// It is easy to implement but not very efficinet.
+//
+// It runs in O(n^2) time, where n := len(input)
+// Space Complexity is O(n)
+func BubbleSort(input []int) []int {
+	array := clone(input)
+	for i := 0; i < len(array); i++ {
+		for j := 0; j < len(array); j++ {
+			if array[i] < array[j] {
+				swap(&array[i], &array[j])
+			}
+		}
+	}
+	return array
+}
+
+// SelectionSort is a simple sorting algorithm that scans
+// through the array and maintains a sorted version of it
+// behind the read head.
+//
+// It runs in O(n^2) time, where n := len(input)
+// Space Complexity is O(n)
+func SelectionSort(input []int) []int {
+	array := clone(input)
+	for i := 1; i < len(array); i++ {
+		key := array[i]
+		j := i - 1
+		for j >= 0 && array[j] > key {
+			array[j+1] = array[j]
+			j--
+		}
+		array[j+1] = key
+	}
+	return array
+}
+
 // MergeSort is a more complex implmentation of sorting, it
 // recursively splits the input and sorts the subarrays. Then
 // it combines the inputs to form the original array. It therefore uses the
@@ -41,49 +80,27 @@ func merge(input, work []int, low, mid, high int) {
 	}
 }
 
-// BubbleSort is the naive implementation of sorting an array.
-// It is easy to implement but not very efficinet.
-//
-// It runs in O(n^2) time, where n := len(input)
-func BubbleSort(input []int) []int {
+func HeapSort(input []int) []int {
 	array := clone(input)
-	for i := 0; i < len(array); i++ {
-		for j := 0; j < len(array); j++ {
-			if array[i] < array[j] {
-				swap(&array[i], &array[j])
-			}
-		}
+	heap := heap.NewMaxHeap(array)
+	for i := heap.Size(); i >= 1; i-- {
+		swap(&array[i], &array[0])
+		heap.Decrement()
+		heap.Heapify(0)
 	}
 	return array
 }
 
-// SelectionSort is a simple sorting algorithm that scans
-// through the array and maintains a sorted version of it
-// behind the read head.
-//
-// It runs in O(n^2) time, where n := len(input)
-func SelectionSort(input []int) []int {
-	array := clone(input)
-	for i := 1; i < len(array); i++ {
-		key := array[i]
-		j := i - 1
-		for j >= 0 && array[j] > key {
-			array[j+1] = array[j]
-			j--
-		}
-		array[j+1] = key
-	}
-	return array
-}
-
+// Space Complexity is O(n)
 func QuickSort(input []int) []int {
 	return MergeSort(input)
 }
 
-func HeapSort(input []int) []int {
+// Space Complexity is O(n)
+func BinaryInsertionSort(input []int) []int {
 	return MergeSort(input)
 }
 
-func BinaryInsertionSort(input []int) []int {
-	return MergeSort(input)
+func binarySearch(input []int, value int) {
+
 }
