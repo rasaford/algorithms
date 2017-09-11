@@ -1,6 +1,9 @@
 package sorting
 
-import "github.com/rasaford/algorithms/datastructure/heap"
+import (
+	"github.com/rasaford/algorithms/datastructures/heap"
+	h "github.com/rasaford/algorithms/internal/helper"
+)
 
 // BubbleSort is the naive implementation of sorting an array.
 // It is easy to implement but not very efficinet.
@@ -8,11 +11,11 @@ import "github.com/rasaford/algorithms/datastructure/heap"
 // It runs in O(n^2) time, where n := len(input)
 // Space Complexity is O(1)
 func BubbleSort(input []int) []int {
-	array := clone(input)
+	array := h.Clone(input)
 	for i := 0; i < len(array); i++ {
 		for j := 0; j < len(array); j++ {
 			if array[i] < array[j] {
-				swap(&array[i], &array[j])
+				h.Swap(&array[i], &array[j])
 			}
 		}
 	}
@@ -26,7 +29,7 @@ func BubbleSort(input []int) []int {
 // It runs in O(n^2) time, where n := len(input)
 // Space Complexity is O(1)
 func SelectionSort(input []int) []int {
-	array := clone(input)
+	array := h.Clone(input)
 	for i := 1; i < len(array); i++ {
 		key := array[i]
 		j := i - 1
@@ -49,7 +52,7 @@ func SelectionSort(input []int) []int {
 func MergeSort(input []int) []int {
 	// merge sort needs 2 arrays
 	// they get swaped at each level of the recursion tree
-	array, work := clone(input), clone(input)
+	array, work := h.Clone(input), h.Clone(input)
 	mergeSortRec(array, work, 0, len(work))
 	return array
 }
@@ -89,10 +92,10 @@ func merge(input, work []int, low, mid, high int) {
 // It runs in O(n lg n) time, where n := len(input)
 // Space Complexity is O(1)
 func HeapSort(input []int) []int {
-	array := clone(input)
+	array := h.Clone(input)
 	heap := heap.NewMaxHeap(array)
 	for i := heap.Size(); i >= 1; i-- {
-		swap(&array[i], &array[0])
+		h.Swap(&array[i], &array[0])
 		heap.Decrement()
 		heap.Heapify(0)
 	}

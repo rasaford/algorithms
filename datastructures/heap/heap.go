@@ -1,6 +1,11 @@
 package heap
 
-import "math"
+import (
+	"fmt"
+	"math"
+
+	"github.com/rasaford/algorithms/internal/helper"
+)
 
 // Heap contains the underyling array of the Heap tree structure. It also stores
 // the compareator as well as the current size of the Heap.
@@ -111,7 +116,7 @@ func (h *Heap) Heapify(index int) {
 		largest = rChild
 	}
 	if largest != index {
-		swap(&h.heap[index], &h.heap[largest])
+		helper.Swap(&h.heap[index], &h.heap[largest])
 		h.Heapify(largest)
 	}
 }
@@ -136,8 +141,56 @@ func (h *Heap) Heapify(index int) {
 // 	}
 // }
 
-func swap(a, b *int) {
-	temp := *a
-	*a = *b
-	*b = temp
+// Insert inserts a new element into the queue at the index corresponding
+// to the priority of the given key.
+//
+// If the new key cannot be inserted because it is to small / large for the used
+// heap type an error is thrown.
+func (h *Heap) Insert(key int) error {
+	newTemp := math.MinInt32
+	if h.hType == "min-heap" {
+		newTemp = math.MaxInt32
+	}
+	h.heap = append(h.heap, newTemp)
+	h.size++
+	return h.UpdateKey(h.size, key)
+}
+
+// Head returns the highest / lowest priority element
+// depending on the queue type.
+func (h *Heap) Head() int {
+	return h.heap[0]
+}
+
+// ExtractHead returns the highest / lowest priority element and delets it
+// depending on the queue type.
+func (h *Heap) ExtractHead() (int, error) {
+	if h.size < 0 {
+		return -1, fmt.Errorf("the heap is too small (size %d)", h.size)
+	}
+	max := h.heap[0]
+	h.heap[0] = h.heap[h.size]
+	h.size--
+	h.Heapify(0)
+	return max, nil
+}
+
+// UpdateKey updates the key value at the specified index to the new key.
+// The new key value has to be larger / smaller than the current one depending on the
+// heap type.
+// If this is not the case an error is thrown.
+func (h *Heap) UpdateKey(index, key int) error {
+	if !h.compare(key, h.heap[index]) {
+		errType := "smaller"
+		if h.hType == "min-heap" {
+			errType = "larger"
+		}
+		return fmt.Errorf("the new key is %s than the current one", errType)
+	}
+	for index > 0 && h.compare(key, h.heap[parent(index)]) {
+		h.heap[index] = h.heap[parent(index)]
+		index = parent(index)
+	}
+	h.heap[index] = key
+	return nil
 }
