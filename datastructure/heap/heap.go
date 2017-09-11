@@ -2,10 +2,15 @@ package heap
 
 import "math"
 
+// Heap contains the underyling array of the Heap tree structure. It also stores
+// the compareator as well as the current size of the Heap.
 type Heap struct {
-	heap    []int
-	size    int
+	heap []int
+	size int
+	// compare defines weather the first element is larger / smaller than
+	// the second based on the type of heap used.
 	compare func(int, int) bool
+	hType   string
 }
 
 // NewMaxHeap builds a max Heap structure on the given array. Every node in the
@@ -15,8 +20,8 @@ type Heap struct {
 //    5
 //  /  \
 // 3   1
-func NewMaxHeap(array []int) Heap {
-	heap := Heap{
+func NewMaxHeap(array []int) *Heap {
+	heap := &Heap{
 		heap: array,
 		size: len(array) - 1,
 		compare: func(a, b int) bool {
@@ -25,6 +30,7 @@ func NewMaxHeap(array []int) Heap {
 			}
 			return false
 		},
+		hType: "max-heap",
 	}
 	for i := heap.size / 2; i >= 0; i-- {
 		heap.Heapify(i)
@@ -39,8 +45,8 @@ func NewMaxHeap(array []int) Heap {
 //    1
 //  /  \
 // 2   5
-func NewMinHeap(array []int) Heap {
-	heap := Heap{
+func NewMinHeap(array []int) *Heap {
+	heap := &Heap{
 		heap: array,
 		size: len(array) - 1,
 		compare: func(a, b int) bool {
@@ -49,6 +55,7 @@ func NewMinHeap(array []int) Heap {
 			}
 			return false
 		},
+		hType: "min-heap",
 	}
 	for i := heap.size / 2; i >= 0; i-- {
 		heap.Heapify(i)
@@ -110,24 +117,24 @@ func (h *Heap) Heapify(index int) {
 }
 
 // heapifyIter is a non-recursive implementation of the heapfiy procedure.
-func (h *Heap) heapifyIter(index int) {
-	largest := -1
-	temporaryIndex := index
-	lChild, rChild := 0, 0
-	for largest != index {
-		largest, index = temporaryIndex, temporaryIndex
-		lChild = left(index)
-		rChild = right(index)
-		if lChild <= h.size && h.compare(h.heap[lChild], h.heap[index]) {
-			largest = lChild
-		}
-		if rChild <= h.size && h.compare(h.heap[rChild], h.heap[largest]) {
-			largest = rChild
-		}
-		swap(&h.heap[index], &h.heap[largest])
-		temporaryIndex = largest
-	}
-}
+// func (h *Heap) heapifyIter(index int) {
+// 	largest := -1
+// 	temporaryIndex := index
+// 	lChild, rChild := 0, 0
+// 	for largest != index {
+// 		largest, index = temporaryIndex, temporaryIndex
+// 		lChild = left(index)
+// 		rChild = right(index)
+// 		if lChild <= h.size && h.compare(h.heap[lChild], h.heap[index]) {
+// 			largest = lChild
+// 		}
+// 		if rChild <= h.size && h.compare(h.heap[rChild], h.heap[largest]) {
+// 			largest = rChild
+// 		}
+// 		swap(&h.heap[index], &h.heap[largest])
+// 		temporaryIndex = largest
+// 	}
+// }
 
 func swap(a, b *int) {
 	temp := *a

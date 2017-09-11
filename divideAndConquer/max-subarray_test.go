@@ -1,6 +1,7 @@
 package divideAndConquer
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -35,7 +36,7 @@ var cases = []struct {
 func TestMaxSubArrayRec(t *testing.T) {
 	for _, c := range cases {
 		res, sum := MaxSubArrayRec(c.in)
-		if !sliceEqual(res, c.want) {
+		if !reflect.DeepEqual(res, c.want) {
 			t.Errorf("Arrays not equal: Want %v but got %v", c.want, res)
 		}
 		if c.sum != sum {
@@ -47,26 +48,11 @@ func TestMaxSubArrayRec(t *testing.T) {
 func TestMaxSubArrayLin(t *testing.T) {
 	for _, c := range cases {
 		res, sum := MaxSubArrayLin(c.in)
-		if !sliceEqual(res, c.want) {
+		if !reflect.DeepEqual(res, c.want) {
 			t.Errorf("Arrays not equal: Want %v but got %v", c.want, res)
 		}
 		if c.sum != sum {
 			t.Errorf("Sum not equal: Want %v but got %v", c.sum, sum)
 		}
 	}
-}
-
-func sliceEqual(a, b []int) bool {
-	if a == nil || b == nil {
-		return false
-	}
-	if len(a) != len(b) {
-		return false
-	}
-	for i, val := range a {
-		if val != b[i] {
-			return false
-		}
-	}
-	return true
 }

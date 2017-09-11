@@ -63,7 +63,7 @@ func validateHeap(array []int, compare func(int, int) bool) error {
 		right := right(i)
 		if left <= len(array)-1 && compare(array[left], array[i]) ||
 			right <= len(array)-1 && compare(array[right], array[i]) {
-			return fmt.Errorf("The Heap Condidtion is not valid on node %d", i)
+			return fmt.Errorf("The Heap condidtion is not valid on node %d", i)
 		}
 	}
 	return nil

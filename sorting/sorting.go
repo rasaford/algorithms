@@ -6,7 +6,7 @@ import "github.com/rasaford/algorithms/datastructure/heap"
 // It is easy to implement but not very efficinet.
 //
 // It runs in O(n^2) time, where n := len(input)
-// Space Complexity is O(n)
+// Space Complexity is O(1)
 func BubbleSort(input []int) []int {
 	array := clone(input)
 	for i := 0; i < len(array); i++ {
@@ -24,7 +24,7 @@ func BubbleSort(input []int) []int {
 // behind the read head.
 //
 // It runs in O(n^2) time, where n := len(input)
-// Space Complexity is O(n)
+// Space Complexity is O(1)
 func SelectionSort(input []int) []int {
 	array := clone(input)
 	for i := 1; i < len(array); i++ {
@@ -80,6 +80,14 @@ func merge(input, work []int, low, mid, high int) {
 	}
 }
 
+// HeapSort builds a max-Heap from the array and then iteratively extracts the
+// maximum element.
+// Every time an element is extracted the heap size gets decremented, effectively
+// removing the element form the heap. The removed elements get stored in this
+// unmodified part of the array.
+//
+// It runs in O(n lg n) time, where n := len(input)
+// Space Complexity is O(1)
 func HeapSort(input []int) []int {
 	array := clone(input)
 	heap := heap.NewMaxHeap(array)
@@ -91,12 +99,12 @@ func HeapSort(input []int) []int {
 	return array
 }
 
-// Space Complexity is O(n)
+// Space Complexity is O(1)
 func QuickSort(input []int) []int {
 	return MergeSort(input)
 }
 
-// Space Complexity is O(n)
+// Space Complexity is O(1)
 func BinaryInsertionSort(input []int) []int {
 	return MergeSort(input)
 }
