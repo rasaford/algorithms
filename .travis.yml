@@ -8,7 +8,10 @@ before_install:
   - go get -t -v ./...
 
 script:
-  - go test ./...  
+## command to consolidate all coverage reports:
+## https://github.com/pierrre/gotestcover
+  - echo 'mode: atomic' > coverage.txt && \go list ./... | xargs -n1 -I{} sh -c 'go test -covermode=atomic -coverprofile=coverage.tmp {} && tail-n +2 coverage.tmp >> coverage.txt' && rm coverage.tmp
 
+## upload coverage stats to codecov.io
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -f all.cov
+  - bash <(curl -s https://codecov.io/bash) -f coverage.txt
