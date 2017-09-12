@@ -7,8 +7,8 @@ import (
 	"github.com/rasaford/algorithms/internal/helper"
 )
 
-// Heap contains the underyling array of the Heap tree structure. It also stores
-// the compareator as well as the current size of the Heap.
+// Heap contains the underlying array of the Heap tree structure. It also stores
+// the comparator as well as the current size of the Heap.
 type Heap struct {
 	heap []int
 	size int
@@ -82,7 +82,7 @@ func (h *Heap) Decrement() {
 
 // parent returns the index of the parent node in the heap.
 //
-// It can be calculated by parent := cleil(index/2) - 1
+// It can be calculated by parent := ceil(index/2) - 1
 func parent(index int) int {
 	return int(math.Ceil(float64(index)/2)) - 1
 }
@@ -162,7 +162,7 @@ func (h *Heap) Head() int {
 	return h.heap[0]
 }
 
-// ExtractHead returns the highest / lowest priority element and delets it
+// ExtractHead returns the highest / lowest priority element and deletes it
 // depending on the queue type.
 func (h *Heap) ExtractHead() (int, error) {
 	if h.size < 0 {

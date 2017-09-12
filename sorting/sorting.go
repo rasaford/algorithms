@@ -22,13 +22,13 @@ func BubbleSort(input []int) []int {
 	return array
 }
 
-// SelectionSort is a simple sorting algorithm that scans
+// InsertionSort is a simple sorting algorithm that scans
 // through the array and maintains a sorted version of it
 // behind the read head.
 //
 // It runs in O(n^2) time, where n := len(input)
 // Space Complexity is O(1)
-func SelectionSort(input []int) []int {
+func InsertionSort(input []int) []int {
 	array := h.Clone(input)
 	for i := 1; i < len(array); i++ {
 		key := array[i]
@@ -104,7 +104,37 @@ func HeapSort(input []int) []int {
 
 // Space Complexity is O(1)
 func QuickSort(input []int) []int {
-	return MergeSort(input)
+	array := h.Clone(input)
+	quickSortRec(array, 0, len(array)-1)
+	return array
+}
+
+func quickSortRec(input []int, start, end int) {
+	if start >= end {
+		return
+	}
+	mid := partition(input, start, end)
+	quickSortRec(input, start, mid-1)
+	quickSortRec(input, mid+1, end)
+}
+
+func partition(array []int, start, end int) int {
+	rand, err := h.RandBetween(start, end)
+	if err != nil {
+		panic(err)
+	}
+	h.Swap(&array[rand], &array[end])
+	radix := array[end]
+	lowerBound := start - 1
+	for i := start; i < end; i++ {
+		if array[i] <= radix {
+			lowerBound++
+			h.Swap(&array[i], &array[lowerBound])
+		}
+	}
+	lowerBound++
+	h.Swap(&array[lowerBound], &array[end])
+	return lowerBound
 }
 
 // Space Complexity is O(1)

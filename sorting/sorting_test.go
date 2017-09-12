@@ -67,10 +67,10 @@ func TestBubbleSort(t *testing.T) {
 	}
 }
 
-func TestSelectionSort(t *testing.T) {
+func TestInsertionSort(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := SelectionSort(tt.args.input); !reflect.DeepEqual(got, tt.want) {
+			if got := InsertionSort(tt.args.input); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("SelectionSort() = %v, want %v", got, tt.want)
 			}
 		})
@@ -82,6 +82,16 @@ func TestQuickSort(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := QuickSort(tt.args.input); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("QuickSort() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestBinaryInsertionSort(t *testing.T) {
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := BinaryInsertionSort(tt.args.input); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("BinaryInsertionSort() = %v, want %v", got, tt.want)
 			}
 		})
 	}
