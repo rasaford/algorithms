@@ -6,7 +6,7 @@ import (
 )
 
 // BubbleSort is the naive implementation of sorting an array.
-// It is easy to implement but not very efficinet.
+// It is easy to implement but not very efficient.
 //
 // It runs in O(n^2) time, where n := len(input)
 // Space Complexity is O(1)
@@ -102,6 +102,12 @@ func HeapSort(input []int) []int {
 	return array
 }
 
+// QuickSort sorts the input array by randomly selecting a radix point from a
+// given subarray. Then it partitions that subarray into 2 sets, one with all elements
+// that are <= the other one with all > than the radix point.
+// This procedure is applied recursively to both partitions to sort the array.
+//
+// It runs in O(n lg n) time where n := len(input)
 // Space Complexity is O(1)
 func QuickSort(input []int) []int {
 	array := h.Clone(input)

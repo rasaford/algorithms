@@ -28,3 +28,16 @@ func RandBetween(a, b int) (int, error) {
 	}
 	return rand.Intn(b-a+1) + a, nil
 }
+
+func FindMinMax(array []int) (int, int) {
+	min, max := math.MaxInt32, math.MinInt32
+	for _, v := range array {
+		if v > max {
+			max = v
+		}
+		if v < min {
+			min = v
+		}
+	}
+	return min, max
+}
