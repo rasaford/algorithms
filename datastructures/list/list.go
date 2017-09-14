@@ -77,11 +77,27 @@ func (l *List) InsertAfter(val int, node *Node) {
 		next:  next,
 	}
 	node.next = n
-	next.prev = n
 	if l.start == nil {
-		l.start = node
+		l.start = n
 	}
 	if l.end == nil {
-		l.end = node
+		l.end = n
+	}
+}
+
+func (l *List) InsertBefore(val int, node *Node) {
+	prev := node.prev
+	n := &Node{
+		value: val,
+		list:  l,
+		prev:  prev,
+		next:  node,
+	}
+	node.prev = n
+	if l.start == nil {
+		l.start = n
+	}
+	if l.end == nil {
+		l.end = n
 	}
 }

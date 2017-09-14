@@ -33,9 +33,16 @@ func RandBetween(a, b int) (int, error) {
 
 // GenerateRandom generates a slice of random numbers between min and max inclusive
 func GenerateRandom(length, min, max int) []int {
+	offset := 0
+	if min < 0 {
+		offset = -min
+		min = 0
+		max += offset
+	}
 	out := make([]int, length)
 	for i := range out {
-		out[i], _ = RandBetween(min, max)
+		v, _ := RandBetween(min, max)
+		out[i] = v - offset
 	}
 	return out
 }
