@@ -1,7 +1,9 @@
 package helper
 
-import "testing"
-import "math"
+import (
+	"math"
+	"testing"
+)
 
 func TestRandBetween(t *testing.T) {
 	type args struct {
@@ -48,6 +50,48 @@ func TestRandBetween(t *testing.T) {
 			}
 			if !tt.wantErr && (min != tt.args.a || max != tt.args.b) {
 				t.Errorf("RandBetween() did not produce values in the range [%d .. %d] ", tt.args.a, tt.args.b)
+			}
+		})
+	}
+}
+
+func TestFindMinMax(t *testing.T) {
+	type args struct {
+		array []int
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  int
+		want1 int
+	}{
+		{
+			"0..20",
+			args{GenerateRandom(1<<10, 0, 20)},
+			0,
+			20,
+		},
+		{
+			"0..0",
+			args{GenerateRandom(1<<10, 0, 0)},
+			0,
+			0,
+		},
+		{
+			"empty array",
+			args{GenerateRandom(0, 0, 222)},
+			0,
+			0,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := FindMinMax(tt.args.array)
+			if got != tt.want {
+				t.Errorf("FindMinMax() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("FindMinMax() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}

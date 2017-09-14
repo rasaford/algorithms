@@ -12,7 +12,7 @@ type args struct {
 	input []int
 }
 
-var rand = generateRandom(1<<12, math.MinInt32, math.MaxInt32)
+var rand = helper.GenerateRandom(1<<12, math.MinInt32, math.MaxInt32)
 var tests = []struct {
 	name string
 	args args
@@ -117,7 +117,7 @@ func TestHeapSort(t *testing.T) {
 }
 
 func TestCountingSort(t *testing.T) {
-	randPos := generateRandom(1<<12, 0, 1<<20)
+	randPos := helper.GenerateRandom(1<<12, 0, 1<<20)
 	tests := []struct {
 		name    string
 		args    args
@@ -176,11 +176,40 @@ func TestBucketSort(t *testing.T) {
 	}
 }
 
-// generates a slice of random numbers between min and max inclusive
-func generateRandom(length, min, max int) []int {
-	out := make([]int, length)
-	for i := range out {
-		out[i], _ = helper.RandBetween(min, max)
+func TestSelect(t *testing.T) {
+	type args struct {
+		input       []int
+		ithSmallest int
 	}
-	return out
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			"reverse sorted",
+			args{[]int{5, 4, 3, 2, 1, 55}, 4},
+			4,
+		},
+		{
+			"random",
+			args{[]int{-1503, 527, 1479, -837, -639, -1658, 825,
+				-1364, 1864, -92, 1222, 687, 1954, 2033, -1704,
+				-742, -373, 1173, 1829, 994, -241, 218, -1432,
+				1682, -897, 1323, -2001, 1272, 1078, -9, 821,
+				1912, 475, 783, -91, 332, -2007, -1033, -1283,
+				914, -371, -1390, -1078, -1213, 497, 915, -1058,
+				740, -1665, -935, -1259, -439, -1547, -873, 1192,
+				1553, 712, -1286, -153, -85, -1277, 30, 189, 412},
+				15},
+			-85,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Select(tt.args.input, tt.args.ithSmallest); got != tt.want {
+				t.Errorf("Select() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }
