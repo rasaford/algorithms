@@ -32,7 +32,7 @@ func (q *boundedQueue) Enqueue(value interface{}) error {
 		return fmt.Errorf("cannot enqueue to a full queue")
 	}
 	q.array[q.tail] = value
-	q.tail = (q.tail + 1) % len(q.array)
+	q.tail = next(q.tail, len(q.array))
 	return nil
 }
 
@@ -44,7 +44,7 @@ func (q *boundedQueue) Dequeue() (interface{}, error) {
 		return nil, fmt.Errorf("cannot dequeue from an empty queue")
 	}
 	ret := q.array[q.head]
-	q.head = (q.head + 1) % len(q.array)
+	q.head = next(q.head, len(q.array))
 	return ret, nil
 }
 
@@ -71,4 +71,16 @@ func (q *unboundedQueue) Dequeue() (interface{}, error) {
 	ret := q.array[0]
 	q.array = q.array[1:]
 	return ret, nil
+}
+
+func next(v int, max int) int {
+	return (v + 1) % max
+}
+
+func prev(v int, max int) int {
+	res := (v - 1) % max
+	if res < 0 {
+		res = max + res
+	}
+	return res
 }

@@ -2,7 +2,7 @@ language: go
 
 os: 
   - linux
-
+  # - osx
 go: 
  - 1.8
  - 1.8.3
@@ -12,9 +12,9 @@ before_install:
   - go get -t -v ./...
 
 script:
-## command to consolidate all coverage reports:
-## https://github.com/pierrre/gotestcover
+# command to consolidate all coverage reports:
+# https://github.com/pierrre/gotestcover
   - echo 'mode'':'' atomic' > coverage.txt && \go list ./... | tail -n +2 | xargs -n1 -I{} sh -c 'go test -covermode=atomic -coverprofile=coverage.tmp {} && tail -n +2 coverage.tmp >> coverage.txt' && rm coverage.tmp
 after_success:
-## upload coverage stats to codecov.io
+# upload coverage stats to codecov.io
   - bash <(curl -s https://codecov.io/bash) -f coverage.txt
