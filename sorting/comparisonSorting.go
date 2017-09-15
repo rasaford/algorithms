@@ -2,7 +2,6 @@ package sorting
 
 import (
 	"github.com/rasaford/algorithms/datastructures/heap"
-	"github.com/rasaford/algorithms/internal/helper"
 	h "github.com/rasaford/algorithms/internal/helper"
 )
 
@@ -142,26 +141,6 @@ func randomPartition(array []int, start, end int) int {
 	lowerBound++
 	h.Swap(&array[lowerBound], &array[end])
 	return lowerBound
-}
-
-func Select(input []int, ithSmallest int) int {
-	copy := helper.Clone(input)
-	return selectRec(copy, 0, len(copy)-1, ithSmallest)
-}
-
-func selectRec(input []int, start, end, nthSmallest int) int {
-	if start == end {
-		return input[end]
-	}
-	mid := randomPartition(input, start, end)
-	lowSide := mid - start + 1 // number of elements on the <= mid side of the array
-	if nthSmallest == lowSide {
-		return input[mid]
-	} else if nthSmallest < lowSide {
-		return selectRec(input, start, mid-1, nthSmallest)
-	} else {
-		return selectRec(input, mid+1, end, nthSmallest-mid-1)
-	}
 }
 
 // Space Complexity is O(1)
