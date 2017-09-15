@@ -59,11 +59,17 @@ func NewUnbounded() Queue {
 	}
 }
 
+// Enqueue adds a new Element at the beginning of the queue.
+//
+// It runs in O(1) time.
 func (q *unboundedQueue) Enqueue(value interface{}) error {
 	q.array = append(q.array, value)
 	return nil
 }
 
+// Dequeue removes the first element from the queue.
+//
+// It runs in O(1) time.
 func (q *unboundedQueue) Dequeue() (interface{}, error) {
 	if len(q.array) == 0 {
 		return nil, fmt.Errorf("cannot dequeue from an empty queue")
@@ -73,10 +79,12 @@ func (q *unboundedQueue) Dequeue() (interface{}, error) {
 	return ret, nil
 }
 
+// next calculates the index of the next element in a looping array.
 func next(v int, max int) int {
 	return (v + 1) % max
 }
 
+// prev calculates the index of the previous element in a looping array.
 func prev(v int, max int) int {
 	res := (v - 1) % max
 	if res < 0 {

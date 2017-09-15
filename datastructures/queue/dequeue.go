@@ -5,6 +5,9 @@ import (
 	"math"
 )
 
+// Dequeue is an implementation of a FIFO datastructure.
+// It allows for adding and removing elements from both the head & tail of
+// the queue.
 type Dequeue interface {
 	EnqueueTail(interface{}) error
 	DequeueTail() (interface{}, error)
@@ -17,6 +20,7 @@ type deQueue struct {
 	head, tail int
 }
 
+// NewDequeue returns a new, empty dequeue with a fixed size.
 func NewDequeue(size int) Dequeue {
 	size = int(math.Max(float64(size), 2))
 	return &deQueue{
@@ -26,6 +30,9 @@ func NewDequeue(size int) Dequeue {
 	}
 }
 
+// EnqueueHead adds a new Element at the beginning of the queue.
+//
+// It runs in O(1) time.
 func (q *deQueue) EnqueueHead(value interface{}) error {
 	if q.tail == prev(q.head, len(q.array)) {
 		return fmt.Errorf("cannot enqueue to a full queue")
@@ -35,6 +42,9 @@ func (q *deQueue) EnqueueHead(value interface{}) error {
 	return nil
 }
 
+// EnqueueTail adds a new Element at the end od the queue.
+//
+// It runs in O(1) time.
 func (q *deQueue) EnqueueTail(value interface{}) error {
 	if q.head == next(q.tail, len(q.array)) {
 		return fmt.Errorf("cannot enqueue to a full queue")
@@ -44,6 +54,9 @@ func (q *deQueue) EnqueueTail(value interface{}) error {
 	return nil
 }
 
+// DequeueHead removes the last element from the queue.
+//
+// It runs in O(1) time.
 func (q *deQueue) DequeueHead() (interface{}, error) {
 	if q.head == q.tail {
 		return nil, fmt.Errorf("cannot dequeue from an empty queue")
@@ -53,6 +66,9 @@ func (q *deQueue) DequeueHead() (interface{}, error) {
 	return ret, nil
 }
 
+// DequeueTail removes the first element from the queue.
+//
+// It runs in O(1) time.
 func (q *deQueue) DequeueTail() (interface{}, error) {
 	if q.head == q.tail {
 		return nil, fmt.Errorf("cannot dequeue from an empty queue")
