@@ -150,7 +150,7 @@ func Select(input []int, ithSmallest int) int {
 }
 
 func selectRec(input []int, start, end, nthSmallest int) int {
-	if start >= end {
+	if start == end {
 		return input[end]
 	}
 	mid := randomPartition(input, start, end)
@@ -160,7 +160,7 @@ func selectRec(input []int, start, end, nthSmallest int) int {
 	} else if nthSmallest < lowSide {
 		return selectRec(input, start, mid-1, nthSmallest)
 	} else {
-		return selectRec(input, mid+1, end, nthSmallest)
+		return selectRec(input, mid+1, end, nthSmallest-mid-1)
 	}
 }
 
