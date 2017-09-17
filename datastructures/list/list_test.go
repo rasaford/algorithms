@@ -1,67 +1,34 @@
 package list
 
 import (
+	"math"
 	"reflect"
 	"testing"
 )
 
-func TestNode_Next(t *testing.T) {
-	tests := []struct {
-		name string
-		n    *Node
-		want *Node
-	}{
-	// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.n.Next(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Node.Next() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestNode_Prev(t *testing.T) {
-	tests := []struct {
-		name string
-		n    *Node
-		want *Node
-	}{
-	// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.n.Prev(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Node.Prev() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestNew(t *testing.T) {
-	tests := []struct {
-		name string
-		want *List
-	}{
-	// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := New(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("New() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestList_Start(t *testing.T) {
+	list := New()
+	list2 := New()
+	for i := 0; i < 10; i++ {
+		list2.Insert(i)
+	}
+	res1, _ := list.Search(math.MinInt32)
+	res2, _ := list2.Search(0)
 	tests := []struct {
 		name string
 		l    *List
 		want *Node
 	}{
-	// TODO: Add test cases.
+		{
+			"empty list",
+			list,
+			res1,
+		},
+		{
+			"nonempty list",
+			list2,
+			res2,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -73,12 +40,28 @@ func TestList_Start(t *testing.T) {
 }
 
 func TestList_End(t *testing.T) {
+	list := New()
+	list2 := New()
+	for i := 0; i < 10; i++ {
+		list2.Insert(i)
+	}
+	res1, _ := list.Search(math.MinInt32)
+	res2, _ := list2.Search(9)
 	tests := []struct {
 		name string
 		l    *List
 		want *Node
 	}{
-	// TODO: Add test cases.
+		{
+			"empty list",
+			list,
+			res1,
+		},
+		{
+			"nonempty list",
+			list2,
+			res2,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -88,46 +71,43 @@ func TestList_End(t *testing.T) {
 		})
 	}
 }
-
 func TestList_Len(t *testing.T) {
+	list := New()
+	list2 := New()
+	for i := 0; i < 10; i++ {
+		list2.Insert(i)
+	}
 	tests := []struct {
 		name string
 		l    *List
 		want int
 	}{
-	// TODO: Add test cases.
+		{
+			"empty list",
+			list,
+			0,
+		},
+		{
+			"nonempty list",
+			list2,
+			10,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.l.Len(); got != tt.want {
+			if got := tt.l.Len(); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("List.Len() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestList_Remove(t *testing.T) {
-	type args struct {
-		index int
+func TestList_Search(t *testing.T) {
+	list := New()
+	for i := 0; i < 100; i++ {
+		list.Insert(i)
 	}
-	tests := []struct {
-		name    string
-		l       *List
-		args    args
-		wantErr bool
-	}{
-	// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := tt.l.Remove(tt.args.index); (err != nil) != tt.wantErr {
-				t.Errorf("List.Remove() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
-func TestList_Get(t *testing.T) {
+	res5, _ := list.Search(5)
 	type args struct {
 		key int
 	}
@@ -138,37 +118,87 @@ func TestList_Get(t *testing.T) {
 		want    *Node
 		wantErr bool
 	}{
-	// TODO: Add test cases.
+		{
+			"search empty list",
+			New(),
+			args{0},
+			nil,
+			true,
+		},
+		{
+			"search contained",
+			list,
+			args{5},
+			res5,
+			false,
+		},
+		{
+			"search not contained",
+			list,
+			args{-5},
+			nil,
+			true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.l.Get(tt.args.key)
+			got, err := tt.l.Search(tt.args.key)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("List.Get() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("List.Search() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("List.Get() = %v, want %v", got, tt.want)
+				t.Errorf("List.Search() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestList_InsertAfter(t *testing.T) {
+func TestList_Delete(t *testing.T) {
+	list := New()
+	for i := 0; i < 100; i++ {
+		list.Insert(i)
+	}
+	del1, _ := list.Search(55)
 	type args struct {
-		val  int
 		node *Node
 	}
 	tests := []struct {
-		name string
-		l    *List
-		args args
+		name    string
+		l       *List
+		args    args
+		wantErr bool
 	}{
-	// TODO: Add test cases.
+		{
+			"delete from empty list",
+			New(),
+			args{nil},
+			true,
+		},
+		{
+			"delete contained item",
+			list,
+			args{del1},
+			false,
+		},
+		{
+			"delete node not contained in list",
+			list,
+			args{&Node{}},
+			true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.l.InsertAfter(tt.args.val, tt.args.node)
+			if err := tt.l.Delete(tt.args.node); (err != nil) != tt.wantErr {
+				t.Fatalf("List.Search() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			} else if tt.args.node != nil && !tt.wantErr {
+				_, err := tt.l.Search(tt.args.node.value)
+				if err == nil {
+					t.Errorf("List.Delete() did not delete the node: %v, %v", tt.args.node, err)
+				}
+			}
 		})
 	}
 }

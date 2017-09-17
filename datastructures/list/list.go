@@ -2,6 +2,7 @@ package list
 
 import (
 	"fmt"
+	"math"
 )
 
 type Node struct {
@@ -13,91 +14,106 @@ type Node struct {
 func (n *Node) Next() *Node {
 	return n.next
 }
+
 func (n *Node) Prev() *Node {
 	return n.prev
 }
 
 type List struct {
-	start, end *Node
-	len        int
+	sentinel *Node
+	len      int
 }
 
 func New() *List {
-	return &List{
-		start: nil,
-		end:   nil,
-		len:   0,
+	list := &List{}
+	// the first node in a list is always a sentinel item with no value.
+	sentinel := &Node{
+		list:  list,
+		value: math.MinInt32,
 	}
+	sentinel.next = sentinel
+	sentinel.prev = sentinel
+	list.sentinel = sentinel
+	return list
 }
 func (l *List) Start() *Node {
-	return l.start
+	if l.len == 0 {
+		return nil
+	}
+	return l.sentinel.next
 }
 func (l *List) End() *Node {
-	return l.end
+	if l.len == 0 {
+		return nil
+	}
+	return l.sentinel.prev
 }
 
 func (l *List) Len() int {
 	return l.len
 }
 
-func (l *List) Remove(index int) error {
-	node, err := l.Get(index)
-	if err != nil {
-		return err
-	}
-	prev, next := node.Prev(), node.Next()
-	if prev != nil {
-		prev.next = next
-	}
-	if next != nil {
-		next.prev = prev
-	}
-	return nil
-}
-
-func (l *List) Get(key int) (*Node, error) {
-	node := l.start
-	index := 0
-	for node != nil {
-		if index == key {
-			return node, nil
-		}
-		node = node.next
-		index++
-	}
-	return nil, fmt.Errorf("node with key: %d is not is the list", key)
-}
-
-func (l *List) InsertAfter(val int, node *Node) {
-	next := node.next
-	n := &Node{
-		value: val,
-		list:  l,
-		prev:  node,
-		next:  next,
-	}
-	node.next = n
-	if l.start == nil {
-		l.start = n
-	}
-	if l.end == nil {
-		l.end = n
-	}
-}
-
-func (l *List) InsertBefore(val int, node *Node) {
-	prev := node.prev
-	n := &Node{
+func (l *List) Insert(val int) {
+	prev := l.sentinel.prev
+	node := &Node{
 		value: val,
 		list:  l,
 		prev:  prev,
-		next:  node,
+		next:  l.sentinel,
 	}
-	node.prev = n
-	if l.start == nil {
-		l.start = n
-	}
-	if l.end == nil {
-		l.end = n
-	}
+	l.sentinel.prev = node
+	prev.next = node
+	l.len++
 }
+
+func (l *List) Delete(node *Node) error {
+	if !l.validNode(node) {
+		return fmt.Errorf("cannot delete node:%v from list", node)
+	}
+	node.prev.next = node.next
+	node.next.prev = node.prev
+	l.len--
+	return nil
+}
+
+func (l *List) Search(key int) (*Node, error) {
+	element := l.sentinel.next
+	for element != l.sentinel && element.value != key {
+		element = element.next
+	}
+	if element == l.sentinel {
+		return nil, fmt.Errorf("key: %d is not contained in the list", key)
+	}
+	return element, nil
+}
+
+func (l *List) validNode(node *Node) bool {
+	if node == nil || node.prev == nil ||
+		node.next == nil || node.list != l ||
+		node == l.sentinel {
+		return false
+	}
+	return true
+}
+
+// func (l *List) InsertAfter(val int, node *Node) {
+// 	next := node.next
+// 	n := &Node{
+// 		value: val,
+// 		list:  l,
+// 		prev:  node,
+// 		next:  next,
+// 	}
+// 	node.next = n
+// 4}
+
+// func (l *List) InsertBefore(val int, node *Node) {
+// 	prev := node.prev
+// 	n := &Node{
+// 		value: val,
+// 		list:  l,
+// 		prev:  prev,
+// 		next:  node,
+// 	}
+// 	node.prev = n
+// }

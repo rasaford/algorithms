@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/rasaford/algorithms/datastructures/queue"
 )
 
 func main() {
-	fmt.Println(-7 % 5)
-	fmt.Println(5 % 5)
+	q := queue.NewDequeue(55) 
+	q.DequeueTail()
 }
