@@ -202,3 +202,49 @@ func TestList_Delete(t *testing.T) {
 		})
 	}
 }
+
+func TestConcat(t *testing.T) {
+	listA := New()
+	listB := New()
+	for i := 0; i < 1000; i++ {
+		listA.Insert(i)
+		listB.Insert(i * i)
+	}
+	type args struct {
+		a *List
+		b *List
+	}
+	tests := []struct {
+		name string
+		args args
+		want *List
+	}{
+		{
+			"empty lists",
+			args{New(), New()},
+			New(),
+		},
+		{
+			"first empty",
+			args{New(), listB},
+			listB,
+		},
+		{
+			"second empty",
+			args{listA, New()},
+			listA,
+		},
+		{
+			"nonempty lists",
+			args{listA, listB},
+			listA,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Concat(tt.args.a, tt.args.b); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Concat() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
