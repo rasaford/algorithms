@@ -5,6 +5,11 @@ import (
 	"testing"
 )
 
+//		  1
+// 	   /    \
+//    2      5
+//  /  \   /  \
+// 3   4  6    7
 var bTree = &binaryTree{
 	root: &binaryNode{
 		1,

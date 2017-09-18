@@ -13,7 +13,7 @@ func TestNewDirectAddressTable(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *directAddress
+		want *DirectAddress
 	}{
 		{
 			"empty universe",
@@ -28,7 +28,7 @@ func TestNewDirectAddressTable(t *testing.T) {
 		{
 			"valid universe",
 			args{1 << 4, 1 << 10},
-			&directAddress{
+			&DirectAddress{
 				make([]interface{}, (1<<10)-(1<<4)),
 				1 << 4,
 				1 << 10,
@@ -52,7 +52,7 @@ func Test_directAddress_Insert(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		d       *directAddress
+		d       *DirectAddress
 		args    args
 		want    interface{}
 		wantErr bool
@@ -99,7 +99,7 @@ func Test_directAddress_Search(t *testing.T) {
 	}
 	tests := []struct {
 		name    string
-		d       *directAddress
+		d       *DirectAddress
 		args    args
 		want    interface{}
 		wantErr bool
@@ -162,7 +162,7 @@ func Test_directAddress_Delete(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		d    *directAddress
+		d    *DirectAddress
 		args args
 		want interface{}
 	}{

@@ -4,7 +4,8 @@ import (
 	"fmt"
 )
 
-type directAddress struct {
+// DirectAddress is the structure of the table with it's Universe size.
+type DirectAddress struct {
 	array      []interface{}
 	uMin, uMax int
 }
@@ -13,12 +14,12 @@ type directAddress struct {
 // keyMIn <= x < keyMax.
 //
 // It requires O(u) space with u := keyMax - keyMIn
-func NewDirectAddressTable(keyMin, keyMax int) *directAddress {
+func NewDirectAddressTable(keyMin, keyMax int) *DirectAddress {
 	if keyMin >= keyMax {
 		return nil
 	}
 	size := keyMax - keyMin
-	return &directAddress{
+	return &DirectAddress{
 		array: make([]interface{}, size),
 		uMin:  keyMin,
 		uMax:  keyMax,
@@ -29,7 +30,7 @@ func NewDirectAddressTable(keyMin, keyMax int) *directAddress {
 // valid keys.
 //
 // It runs in O(1) time
-func (d *directAddress) Insert(key int, value interface{}) {
+func (d *DirectAddress) Insert(key int, value interface{}) {
 	if err := d.validateKey(key); err != nil {
 		return
 	}
@@ -40,7 +41,7 @@ func (d *directAddress) Insert(key int, value interface{}) {
 // valid keys.
 //
 // It runs in O(1) time
-func (d *directAddress) Search(key int) (interface{}, error) {
+func (d *DirectAddress) Search(key int) (interface{}, error) {
 	if err := d.validateKey(key); err != nil {
 		return nil, err
 	}
@@ -50,14 +51,14 @@ func (d *directAddress) Search(key int) (interface{}, error) {
 // Delete removes a key form the table if it is in the range of valid keys.
 //
 // It runs in O(1) time
-func (d *directAddress) Delete(key int) {
+func (d *DirectAddress) Delete(key int) {
 	if err := d.validateKey(key); err != nil {
 		return
 	}
 	d.array[key-d.uMin] = nil
 }
 
-func (d *directAddress) validateKey(key int) error {
+func (d *DirectAddress) validateKey(key int) error {
 	if key > d.uMax || key < d.uMin {
 		return fmt.Errorf("key %d is not inside the valid key range of %d<=x<=%d", key, d.uMin, d.uMax)
 	}
