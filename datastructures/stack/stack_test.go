@@ -100,10 +100,15 @@ func TestStack_Push(t *testing.T) {
 }
 
 func TestStack_Pop(t *testing.T) {
+	stack := New()
+	for i := 0; i < 10; i++ {
+		stack.Push(i)
+	}
+	a := 9
 	tests := []struct {
 		name    string
 		s       *Stack
-		want    *interface{}
+		want    *int
 		wantErr bool
 	}{
 		{
@@ -112,9 +117,16 @@ func TestStack_Pop(t *testing.T) {
 			nil,
 			true,
 		},
+		{
+			"pop form nonempty stack",
+			stack,
+			&a,
+			false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			oldTop := tt.s.top
 			got, err := tt.s.Pop()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Stack.Pop() error = %v, wantErr %v", err, tt.wantErr)
@@ -122,6 +134,9 @@ func TestStack_Pop(t *testing.T) {
 			}
 			if (err != nil) != tt.wantErr && !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Stack.Pop() = %v, want %v", got, tt.want)
+			}
+			if !tt.wantErr && oldTop == tt.s.top {
+				t.Errorf("Stack.Pop() did not decrease the stack size")
 			}
 		})
 	}

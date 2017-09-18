@@ -41,6 +41,7 @@ func (s *Stack) Pop() (interface{}, error) {
 		return nil, fmt.Errorf("cannot pop form empty stack")
 	}
 	res := s.array[s.top]
+	s.array = s.array[:s.top]
 	s.top--
 	return res, nil
 }
