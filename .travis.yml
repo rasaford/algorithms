@@ -4,8 +4,9 @@ os:
   - linux
   # - osx
 go: 
- - 1.8
- - 1.8.3
+# since math/bits is used go >= 1.9 is required to build
+#  - 1.8
+#  - 1.8.3
  - 1.9
 
 before_install:
