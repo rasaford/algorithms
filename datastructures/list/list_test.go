@@ -95,7 +95,7 @@ func TestList_Len(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.l.Len(); !reflect.DeepEqual(got, tt.want) {
+			if got := tt.l.Len; !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("List.Len() = %v, want %v", got, tt.want)
 			}
 		})
@@ -194,7 +194,7 @@ func TestList_Delete(t *testing.T) {
 				t.Fatalf("List.Search() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			} else if tt.args.node != nil && !tt.wantErr {
-				_, err := tt.l.Search(tt.args.node.value)
+				_, err := tt.l.Search(tt.args.node.Value)
 				if err == nil {
 					t.Errorf("List.Delete() did not delete the node: %v, %v", tt.args.node, err)
 				}

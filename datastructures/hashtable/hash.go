@@ -4,36 +4,54 @@ import (
 	"encoding/binary"
 	"math/big"
 	"math/bits"
-	"runtime"
 )
 
 func hashDivision(key, max uint) uint {
 	return key % max
 }
 
-func HashMultiply64(key, max uint64) uint64 {
-	maxLen := bits.Len(uint(max))
-	wordSize := 32
-	hashConstant := uint64(2.654435769e+09)
-	if runtime.GOARCH == "amd64" {
-		wordSize = 64
-		hashConstant = 1.1400714819323198485e+019
+func hashDivision2(key, max uint) uint {
+	res := key % max
+	if res%2 == 0 {
+		return res - 1
 	}
-	hashBig := big.NewInt(0).SetUint64(hashConstant)
-	keyBig := big.NewInt(0).SetUint64(uint64(key))
-	hashBig.Mul(hashBig, keyBig)
-	bytes := hashBig.Bytes()
-	start := len(bytes) - wordSize/8
-	bytes = bytes[start:]
-	return uint64(highOrderBits(bytes, maxLen-1))
+	return res
 }
 
+// HashMultiply64 hashes the key to a value in the range o <= x <= max.
+// The hashing is based on applying the following function
+//
+//	h(k, m) = floor(m * (k * A mod 1))
+// A = (sqrt(5) -1) / 2 = s / 2^w
+//
+// The first w significant bits are used as the hash value
+// Hashing takes O(1) time.
+func HashMultiply64(key, max uint64) uint64 {
+	maxLen := bits.Len(uint(max))
+	hash := big.NewInt(0).SetUint64(1.1400714819323198485e+019) // (sqrt(5) - 1) * 2^(wordSize - 1)
+	keyBig := big.NewInt(0).SetUint64(uint64(key))
+	hash.Mul(hash, keyBig)
+	hashB := hash.Bytes()
+	wordSize := 64
+	start := len(hashB) - wordSize/8
+	hashB = hashB[start:] // bit masking for the lower half of the result
+	return uint64(highOrderBits(hashB, maxLen-1))
+}
+
+// HashMultiply32 hashes the key to a value in the range o <= x <= max.
+// The hashing is based on applying the following function
+//
+//	h(k, m) = floor(m * (k * A mod 1))
+// A = (sqrt(5) -1) / 2 = s / 2^w
+//
+// The first w significant bits are used as the hash value
+// Hashing takes O(1) time.
 func HashMultiply32(key, max uint32) uint32 {
 	maxLen := bits.Len(uint(max))
 	hashConstant := uint64(2.654435769e+09) // (sqrt(5) - 1) * 2^(wordSize - 1)
 	res := hashConstant * uint64(key)
-	res &= 0x00000000FFFFFFFF
-	res = res >> uint(32-maxLen+1)
+	res &= 0x00000000FFFFFFFF // bit masking for the lower half of the result
+	res >>= uint(32 - maxLen + 1)
 	return uint32(res)
 }
 
