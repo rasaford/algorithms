@@ -4,6 +4,8 @@ import (
 	"github.com/rasaford/algorithms/datastructures/list"
 )
 
+// Table is a common interface for all the Hashtable implementations it supports:
+// Insert, Search and Delete.
 type Table interface {
 	Insert(string, interface{})
 	Search(string) interface{}
@@ -21,6 +23,8 @@ type pair struct {
 	value interface{}
 }
 
+// NewChaining returns a new HashTable that uses chaining to deal with hash collisions.
+// If the average length of the chains is >= 3 items, the table gets doubled in size.
 func NewChaining() Table {
 	return &chaining{
 		values:  make([]*list.List, 8),
@@ -29,6 +33,11 @@ func NewChaining() Table {
 	}
 }
 
+// Insert inserts the given value at the hash location of the key.
+// If the current loadfactor is > than the specified maximum, the underlying table
+// gets doubled in size.
+//
+// It runs in O(1) expected time. Wort case is O(n) with n := len(table)
 func (t *chaining) Insert(key string, val interface{}) {
 	if t.loadFactor() > t.maxLoad {
 		t.tableDouble()
@@ -41,6 +50,10 @@ func (t *chaining) Insert(key string, val interface{}) {
 	t.len++
 }
 
+// Search seaches for the given key in the table and retuns an items if
+// one is found. Otherwise nil is returned.
+//
+// It runs in O(1) time.
 func (t *chaining) Search(key string) interface{} {
 	hash := t.hash(key)
 	list := t.values[hash]
@@ -58,6 +71,9 @@ func (t *chaining) Search(key string) interface{} {
 	return nil
 }
 
+// Delete deletes the value at the given key from the table.
+//
+// It runs in O(1) time.
 func (t *chaining) Delete(key string) {
 	hash := t.hash(key)
 	list := t.values[hash]
@@ -80,6 +96,8 @@ func (t *chaining) loadFactor() float64 {
 	return float64(t.len) / float64(len(t.values))
 }
 
+// tableDouble copies all keys / values from the current table into a newone, twice the size.
+// All keys are rehashed to retain the properties of the hashtable.
 func (t *chaining) tableDouble() {
 	oldVal := t.values
 	size := len(oldVal)
@@ -121,6 +139,9 @@ type deletablePair struct {
 	deleted bool
 }
 
+// NewOpenAddressing returns a Hashtable which uses only a single array to store the values
+// and deals with hash collisions by rehashing the current key to a different slot until
+// a non empty one is found.
 func NewOpenAddressing() Table {
 	return &openAddressing{
 		values: make([]*deletablePair, 8),
@@ -128,6 +149,11 @@ func NewOpenAddressing() Table {
 	}
 }
 
+// Insert inserts the given value at the hash location of the key.
+// If the current loadfactor is > than the specified maximum, the underlying table
+// gets doubled in size.
+//
+// It runs in O(1) expected time. Wort case is O(n) with n := len(table)
 func (t *openAddressing) Insert(key string, value interface{}) {
 	if t.loadFactor() > 0.5 {
 		t.tableDouble()
@@ -147,6 +173,10 @@ func (t *openAddressing) Insert(key string, value interface{}) {
 	}
 }
 
+// Search seaches for the given key in the table and retuns an items if
+// one is found. Otherwise nil is returned.
+//
+// It runs in O(1) time.
 func (t *openAddressing) Search(key string) interface{} {
 	round := 0
 	for round != len(t.values) {
@@ -160,6 +190,9 @@ func (t *openAddressing) Search(key string) interface{} {
 	return nil
 }
 
+// Delete deletes the value at the given key from the table.
+//
+// It runs in O(1) time.
 func (t *openAddressing) Delete(key string) {
 	round := 0
 	for round != len(t.values) {
@@ -174,6 +207,7 @@ func (t *openAddressing) Delete(key string) {
 	}
 }
 
+// hash on an openAddressing table uses the double hashing scheme to deal with hash collisions.
 func (t *openAddressing) hash(key string, round int) uint32 {
 	num := uint(stringToInt(key))
 	max := uint(len(t.values) - 1)
@@ -184,6 +218,8 @@ func (t *openAddressing) loadFactor() float64 {
 	return float64(t.len) / float64(len(t.values))
 }
 
+// tableDouble copies all keys / values from the current table into a newone, twice the size.
+// All keys are rehashed to retain the properties of the hashtable.
 func (t *openAddressing) tableDouble() {
 	oldVal := t.values
 	size := len(oldVal)
