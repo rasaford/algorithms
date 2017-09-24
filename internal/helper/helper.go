@@ -1,9 +1,11 @@
 package helper
 
 import (
+	"bytes"
 	"fmt"
 	"math"
 	"math/rand"
+	"reflect"
 )
 
 // Swap uses pointers to two ints to swap them
@@ -81,4 +83,41 @@ func FindMinMax(array []int) (int, int) {
 		}
 	}
 	return min, max
+}
+
+func Print(node interface{}) {
+	print(reflect.ValueOf(node), "", true, make(map[string]bool, 0))
+}
+func print(node reflect.Value, prefix string, tail bool, seen map[string]bool) {
+	if !node.IsValid() {
+		return
+	}
+	str := node.String()
+	if res := seen[str]; res {
+		return
+	}
+	seen[str] = true
+	spacer1, spacer2 := "└── ", "    "
+	if !tail {
+		spacer1 = "├── "
+		spacer2 = "│   "
+	}
+	fmt.Println(concat(prefix, spacer1, str, "\n"))
+	w := concat(prefix, spacer2)
+	v := reflect.ValueOf(node)
+	switch v.Kind() {
+	case reflect.Struct:
+		for i := 0; i < v.NumField()-1; i++ {
+			print(v.Field(i), w, false, seen)
+		}
+		print(v.Field(v.NumField()-1), w, true, seen)
+	}
+}
+
+func concat(strings ...string) string {
+	buffer := bytes.Buffer{}
+	for _, str := range strings {
+		buffer.WriteString(str)
+	}
+	return buffer.String()
 }
