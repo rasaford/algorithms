@@ -102,8 +102,8 @@ func print(node reflect.Value, prefix string, tail bool, seen map[string]bool) {
 		spacer1 = "├── "
 		spacer2 = "│   "
 	}
-	fmt.Println(concat(prefix, spacer1, str, "\n"))
-	w := concat(prefix, spacer2)
+	fmt.Println(Concat(prefix, spacer1, str, "\n"))
+	w := Concat(prefix, spacer2)
 	v := reflect.ValueOf(node)
 	switch v.Kind() {
 	case reflect.Struct:
@@ -114,7 +114,7 @@ func print(node reflect.Value, prefix string, tail bool, seen map[string]bool) {
 	}
 }
 
-func concat(strings ...string) string {
+func Concat(strings ...string) string {
 	buffer := bytes.Buffer{}
 	for _, str := range strings {
 		buffer.WriteString(str)
