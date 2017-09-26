@@ -2,30 +2,39 @@ package tree
 
 import "fmt"
 
+// Tree is the common interface for all tree implementations.
 type Tree interface {
+	// Serach finds the key in the tree and retuns the corresponding value.
+	// If the key cannot be found nil will be returned
+	//
+	// It runs in O(h) time with h := height(tree)
 	Search(int) interface{}
+	// Insert inserts the given value at the key
+	//
+	// It runs in O(h) time with h := height(tree)
 	Insert(int, interface{})
+	// Delete deletes the value at the key.
+	// If the key is not in the tree nothing happens
+	//
+	// It runs in O(h) time with h := height(tree)
 	Delete(int)
-	predecessor(*binaryNode) *binaryNode
-	successor(*binaryNode) *binaryNode
-	min(*binaryNode) *binaryNode
-	max(*binaryNode) *binaryNode
 }
 
-// binaryTree is a container for a binary search tree.
 type binaryTree struct {
 	root *binaryNode
 	size int
 }
 
-// binaryNode is a container for a node in a BST.
 type binaryNode struct {
 	key                 int
 	value               interface{}
 	left, right, parent *binaryNode
 }
 
-// NewBinaryTree returns a new, empty binary tree
+// NewBinaryTree returns a new, empty binary tree.
+// Beause it is unbalanced the height is O(n) with n := #Nodes in the tree.
+//
+// Therefore all Operations can run in O(n) in the worst case.
 func NewBinaryTree() Tree {
 	return &binaryTree{}
 }
@@ -91,7 +100,7 @@ func (t *binaryTree) Delete(key int) {
 	} else if node.right == nil {
 		t.transplant(node, node.left)
 	} else {
-		successor := t.min(node.right)
+		successor := t.Min(node.right)
 		// if successor is node's right child replace it with it's right child.
 		// (the left child has to be nil)
 		if successor.parent != node {
@@ -111,7 +120,7 @@ func (t *binaryTree) Delete(key int) {
 //    p			      p
 //  /  \			/  \
 //      u	->         v
-//     / \		      / \
+//     / \		     /  \
 //    v
 //  /  \
 func (t *binaryTree) transplant(u, v *binaryNode) {
@@ -127,29 +136,29 @@ func (t *binaryTree) transplant(u, v *binaryNode) {
 	}
 }
 
-// min finds the node with the smallest key in the tree.
-func (t *binaryTree) min(n *binaryNode) *binaryNode {
+// Min finds the node with the smallest key in the tree.
+func (t *binaryTree) Min(n *binaryNode) *binaryNode {
 	for n.left != nil {
 		n = n.left
 	}
 	return n
 }
 
-// max finds the node with the gratest key in the tree.
-func (t *binaryTree) max(n *binaryNode) *binaryNode {
+// Max finds the node with the gratest key in the tree.
+func (t *binaryTree) Max(n *binaryNode) *binaryNode {
 	for n.right != nil {
 		n = n.right
 	}
 	return n
 }
 
-// successor finds the node with the next gratest key in the tree.
-func (t *binaryTree) successor(node *binaryNode) *binaryNode {
+// Successor finds the node with the next gratest key in the tree.
+func (t *binaryTree) Successor(node *binaryNode) *binaryNode {
 	if node == nil {
 		return nil
 	}
 	if node.right != nil {
-		return t.min(node.right)
+		return t.Min(node.right)
 	}
 	parent := node.parent
 	for parent != nil && node == parent.right {
@@ -159,13 +168,13 @@ func (t *binaryTree) successor(node *binaryNode) *binaryNode {
 	return parent
 }
 
-// predecessor finds the node with the next smallest key in the tree.
-func (t *binaryTree) predecessor(node *binaryNode) *binaryNode {
+// Predecessor finds the node with the next smallest key in the tree.
+func (t *binaryTree) Predecessor(node *binaryNode) *binaryNode {
 	if node == nil {
 		return nil
 	}
 	if node.left != nil {
-		return t.max(node.left)
+		return t.Max(node.left)
 	}
 	parent := node.parent
 	for parent != nil && node == parent.left {
@@ -174,56 +183,6 @@ func (t *binaryTree) predecessor(node *binaryNode) *binaryNode {
 	}
 	return parent
 }
-
-// String retuns all the values in the binary tree concatenated together..
-// func (t *binaryTree) String() string {
-// 	out := ""
-// 	do := func(a int) {
-// 		out = fmt.Sprintf("%s %d", out, a)
-// 	}
-// 	t.root.walkIterative(do)
-// 	return strings.TrimSpace(out)
-// }
-
-// walkRecursive performs a recursive depth first search on the subtree at the given
-// node and exectues the function do() for each value.
-//
-// It runs in O(n) time with  n := len(tree)
-// It uses O(1) extra space in memory
-// func (n *binaryNode) walkRecursive(do func(int)) {
-// 	if n == nil {
-// 		return
-// 	}
-// 	do(n.value)
-// 	n.left.walkRecursive(do)
-// 	n.right.walkRecursive(do)
-// }
-
-// walkIterative performs a iterative depth first search on the subtree at the given
-// node and exectues the function do() for each value.
-//
-// It runs in O(n) time with  n := len(tree)
-// It uses O(n) extra space in memory
-// func (n *binaryNode) walkIterative(do func(int)) {
-// 	if n == nil {
-// 		return
-// 	}
-// 	stack := stack.New()
-// 	for {
-// 		do(n.value)
-// 		if n.right != nil {
-// 			stack.Push(n.right)
-// 		}
-// 		if n.left != nil {
-// 			stack.Push(n.left)
-// 		}
-// 		if node, err := stack.Pop(); err != nil {
-// 			break
-// 		} else {
-// 			n = node.(*binaryNode)
-// 		}
-// 	}
-// }
 
 func (n *binaryNode) String() string {
 	return fmt.Sprintf("k: %d,v: %v", n.key, n.value)
