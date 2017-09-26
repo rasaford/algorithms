@@ -29,14 +29,6 @@ type rbNode struct {
 	color bool
 }
 
-func (n *rbNode) String() string {
-	color := "BLACK"
-	if n.color {
-		color = "RED"
-	}
-	return fmt.Sprintf("%s k: %d,v: %v", color, n.key, n.value)
-}
-
 // NewRedBlackTree creates an empty Red - Black tree. A RB-Tree is a balanced tree
 // that guarantees that it's height is always O(lg n), with n := #Nodes in the tree.
 //
@@ -272,11 +264,39 @@ func (t *rbTree) deleteFixup(z *rbNode) {
 }
 
 func (t *rbTree) Predecessor(node *rbNode) *rbNode {
-	return nil
+	if node == nil {
+		return nil
+	}
+	if node.left != t.sentinel {
+		return t.Max(node.left)
+	}
+	parent := node.parent
+	for parent != t.sentinel && node == parent.left {
+		node = parent
+		parent = parent.parent
+	}
+	if parent == t.sentinel {
+		return nil
+	}
+	return parent
 }
 
 func (t *rbTree) Successor(node *rbNode) *rbNode {
-	return nil
+	if node == nil {
+		return nil
+	}
+	if node.right != t.sentinel {
+		return t.Min(node.right)
+	}
+	parent := node.parent
+	for parent != t.sentinel && node == parent.right {
+		node = parent
+		parent = parent.parent
+	}
+	if parent == t.sentinel {
+		return nil
+	}
+	return parent
 }
 
 // Min finds the node with the smallest key in the tree.
@@ -352,9 +372,19 @@ func (t *rbTree) rightRotate(node *rbNode) {
 	rot.right = node // put node on rot's right
 	node.parent = rot
 }
+
 func (t *rbTree) String() string {
 	return print(t.root, "", true)
 }
+
+func (n *rbNode) String() string {
+	color := "BLACK"
+	if n.color {
+		color = "RED"
+	}
+	return fmt.Sprintf("%s k: %d,v: %v", color, n.key, n.value)
+}
+
 func print(node *rbNode, prefix string, tail bool) string {
 	if node == nil {
 		return ""
