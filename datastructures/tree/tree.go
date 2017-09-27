@@ -34,7 +34,7 @@ type binaryNode struct {
 // NewBinaryTree returns a new, empty binary tree.
 // Beause it is unbalanced the height is O(n) with n := #Nodes in the tree.
 //
-// Therefore all Operations can run in O(n) in the worst case.
+// Therefore all Operations can run in O(n) in the worst case
 func NewBinaryTree() Tree {
 	return &binaryTree{}
 }

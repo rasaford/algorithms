@@ -121,3 +121,13 @@ func Concat(strings ...string) string {
 	}
 	return buffer.String()
 }
+
+func Max(vals ...int) int {
+	max := 0
+	for v := range vals {
+		if v > max {
+			max = v
+		}
+	}
+	return max
+}
