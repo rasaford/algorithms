@@ -1,5 +1,7 @@
 package matrix
 
+import "fmt"
+
 // SquareMultiply is the naive implementation resulting form the definition of
 // matrix multiplication. If the input matricies are not square an error is returned
 // It runs in O(n^3) time, where n := len(input)
@@ -17,6 +19,22 @@ func SquareMultiply(a, b [][]int) ([][]int, error) {
 		}
 	}
 	return c, nil
+}
+
+func Multiply(a, b [][]int) ([][]int, error) {
+	if len(a[0]) != len(b) {
+		return nil, fmt.Errorf("a.columns != b.rows: incompatible dimensions")
+	}
+	result := make([][]int, len(a))
+	for i := range result {
+		result[i] = make([]int, len(b[0]))
+		for j := range b[0] {
+			for k := 0; k < len(a[0]); k++ {
+				result[i][j] += a[i][k] * b[k][j]
+			}
+		}
+	}
+	return result, nil
 }
 
 // SquareMultiplyStrassen is a naive implementation of the Strassen algorithm for maxtrix

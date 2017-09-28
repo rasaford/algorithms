@@ -122,9 +122,10 @@ func Concat(strings ...string) string {
 	return buffer.String()
 }
 
+// Max returns the maximum value of the arguments
 func Max(vals ...int) int {
-	max := 0
-	for v := range vals {
+	max := math.MinInt32
+	for _, v := range vals {
 		if v > max {
 			max = v
 		}
